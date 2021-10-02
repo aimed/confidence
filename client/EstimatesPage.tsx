@@ -12,7 +12,6 @@ import { usernameState } from "./user/usernameState"
 import { groupByValue } from "./object"
 import { Button, Divider, Spacer } from "./Atoms"
 import { UserSettingsForm } from "./user/UserSettingsForm"
-import { Link } from "react-router-dom"
 
 const CurrentUsernameSubscription = () => {
   const [currentUsername] = useRecoilState(usernameState)
@@ -224,8 +223,6 @@ const Sidebar = () => {
 
   return (
     <div className="flex flex-col p-4 bg-gray-800  text-gray-200">
-      <Link to="/confidences">Go to Confidences</Link>
-      <Spacer />
       <h2 className="text-lg text-center">Settings</h2>
       <Spacer />
       <UserSettingsForm />
