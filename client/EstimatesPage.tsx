@@ -7,7 +7,6 @@ import {
   selectorFamily,
   RecoilRoot,
 } from "recoil"
-import { motion, AnimatePresence } from "framer-motion"
 import { useSocket, SocketProvider } from "./useSocket"
 import { usernameState } from "./user/usernameState"
 import { groupByValue } from "./object"
@@ -125,12 +124,14 @@ const ClearAllAndHideButton = () => {
 
 const isEstimateSelectedState = selectorFamily({
   key: "isEstimateSelectedState",
-  get: (value) => ({ get }) => {
-    const username = get(usernameState)
-    const estimates = get(estimatesState)
-    const selectedByUser = estimates[username]
-    return selectedByUser === value
-  },
+  get:
+    (value) =>
+    ({ get }) => {
+      const username = get(usernameState)
+      const estimates = get(estimatesState)
+      const selectedByUser = estimates[username]
+      return selectedByUser === value
+    },
 })
 
 const ValueButton: React.FC<{ value: string }> = ({ value }) => {
@@ -138,19 +139,13 @@ const ValueButton: React.FC<{ value: string }> = ({ value }) => {
   const onSelect = useVote()
   const onUnset = useUnset()
   const onClick = () => (isSelected ? onUnset() : onSelect(value))
-  const variants = {
-    initial: { scale: 1 },
-    selected: { scale: 1.2 },
-  }
+
   return (
-    <motion.button
+    <button
       className={`p-2 rounded-full shadow-lg ${
         isSelected ? "bg-blue-500" : "bg-blue-200"
       } hover:bg-blue-500`}
       onClick={onClick}
-      variants={variants}
-      initial={"initial"}
-      animate={isSelected ? "selected" : "initial"}
     >
       <span
         className="flex items-center justify-center bg-white rounded-full text-lg"
@@ -158,7 +153,7 @@ const ValueButton: React.FC<{ value: string }> = ({ value }) => {
       >
         {value}
       </span>
-    </motion.button>
+    </button>
   )
 }
 
@@ -229,43 +224,29 @@ const Sidebar = () => {
 
   return (
     <div className="flex flex-col p-4 bg-gray-800  text-gray-200">
-      <AnimatePresence>
-        <Link to="/confidences">Go to Confidences</Link>
-        <Spacer />
-        <h2 className="text-lg text-center">Settings</h2>
-        <Spacer />
-        <UserSettingsForm />
-        <Spacer size={4} />
+      <Link to="/confidences">Go to Confidences</Link>
+      <Spacer />
+      <h2 className="text-lg text-center">Settings</h2>
+      <Spacer />
+      <UserSettingsForm />
+      <Spacer size={4} />
 
-        <h1 className="text-lg text-center">Estimates</h1>
-        <Spacer />
-        <HideButton />
-        <Spacer />
-        <ClearAllAndHideButton />
+      <h1 className="text-lg text-center">Estimates</h1>
+      <Spacer />
+      <HideButton />
+      <Spacer />
+      <ClearAllAndHideButton />
 
-        <Divider />
-        <div className="text-center text-lg">
-          # Votes:{" "}
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 2 } }}
-            key={voteCount}
-          >
-            {voteCount}
-          </motion.span>
+      <Divider />
+      <div className="text-center text-lg">
+        # Votes: <span key={voteCount}>{voteCount}</span>
+      </div>
+      {hidden ? null : (
+        <div>
+          <Divider />
+          <VoteCount />
         </div>
-        {hidden ? null : (
-          <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.3 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
-          >
-            <Divider />
-            <VoteCount />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      )}
     </div>
   )
 }
