@@ -29,4 +29,4 @@ class EstimatePoll {
   }
 }
 
-exports.ConfidencePoll = EstimatePoll
+exports.EstimatePoll = EstimatePoll
