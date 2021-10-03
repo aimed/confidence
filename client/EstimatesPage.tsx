@@ -115,7 +115,7 @@ const ClearAllAndHideButton = () => {
   }
 
   return (
-    <Button color={"red"} onClick={handler}>
+    <Button variant="destructive" onClick={handler}>
       Clear All & Hide
     </Button>
   )
@@ -138,31 +138,23 @@ const ValueButton: React.FC<{ value: string }> = ({ value }) => {
   const onSelect = useVote()
   const onUnset = useUnset()
   const onClick = () => (isSelected ? onUnset() : onSelect(value))
+  const variant = isSelected ? "selected" : "unselected"
 
   return (
     <button
-      className={`p-2 rounded-full shadow-lg ${
-        isSelected ? "bg-blue-500" : "bg-blue-200"
-      } hover:bg-blue-500`}
+      className={`estimate estimate--${variant} shadow`}
       onClick={onClick}
     >
-      <span
-        className="flex items-center justify-center bg-white rounded-full text-lg"
-        style={{ width: "4ch", height: "4ch" }}
-      >
-        {value}
-      </span>
+      <span className="estimate__inner">{value}</span>
     </button>
   )
 }
 
 const EstimatePicker = () => {
   return (
-    <div className="flex flex-row flex-wrap -ml-2 -mt-2">
-      {ESTIMATE_VALUES.map((value) => (
-        <div className="m-2" key={value}>
-          <ValueButton value={value} />
-        </div>
+    <div className="estimate-picker">
+      {estimateValues.map((value) => (
+        <ValueButton value={value} key={value} />
       ))}
     </div>
   )
@@ -177,6 +169,9 @@ const VoteCount = () => {
 
   return (
     <>
+      {estimatesWithVotesSorted.length === 0 && (
+        <div className="text-lg text-center">No votes :(</div>
+      )}
       {estimatesWithVotesSorted.map((entry) => {
         const [value, votes] = entry
         const votesCount = votes.length
@@ -211,7 +206,7 @@ const HideButton = () => {
   const [hidden, setHidden] = useRecoilState(hiddenState)
 
   return (
-    <Button color={"blue"} onClick={() => setHidden(!hidden)}>
+    <Button onClick={() => setHidden(!hidden)}>
       {hidden ? "Show Results" : "Hide Results"}
     </Button>
   )
@@ -222,11 +217,12 @@ const Sidebar = () => {
   const hidden = useRecoilValue(hiddenState)
 
   return (
-    <div className="flex flex-col p-4 bg-gray-800  text-gray-200">
+    <div className="sidebar">
       <h2 className="text-lg text-center">Settings</h2>
       <Spacer />
       <UserSettingsForm />
-      <Spacer size={4} />
+      <Spacer />
+      <Spacer />
 
       <h1 className="text-lg text-center">Estimates</h1>
       <Spacer />
@@ -235,7 +231,7 @@ const Sidebar = () => {
       <ClearAllAndHideButton />
 
       <Divider />
-      <div className="text-center text-lg">
+      <div className="text-lg text-center ">
         # Votes: <span key={voteCount}>{voteCount}</span>
       </div>
       {hidden ? null : (
@@ -248,7 +244,7 @@ const Sidebar = () => {
   )
 }
 
-const ESTIMATE_VALUES = [
+const estimateValues = [
   "1",
   "2",
   "3",
@@ -269,12 +265,8 @@ export const EstimatesPage = () => (
       <HiddenStateSubscription />
       <EstimatesSubscription />
       <CurrentUsernameSubscription />
-      <main className="flex flex-row min-h-screen items-stretch">
-        <div className="p-4 bg-gray-100 flex-grow flex items-center justify-center">
-          <div>
-            <EstimatePicker />
-          </div>
-        </div>
+      <main className="layout">
+        <EstimatePicker />
         <Sidebar />
       </main>
     </SocketProvider>

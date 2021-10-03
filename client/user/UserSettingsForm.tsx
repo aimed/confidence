@@ -6,7 +6,7 @@ export const UserSettingsForm = () => {
 
   return (
     <input
-      className="bg-grey-100 text-gray-900 rounded shadow p-2"
+      className="input shadow"
       value={username}
       onChange={(event) => setUsername(event.target.value)}
     />
