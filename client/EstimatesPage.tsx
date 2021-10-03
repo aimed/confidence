@@ -5,13 +5,25 @@ import {
   useRecoilValue,
   selector,
   selectorFamily,
-  RecoilRoot,
 } from "recoil"
 import { useSocket, SocketProvider } from "./useSocket"
 import { usernameState } from "./user/usernameState"
 import { groupByValue } from "./object"
 import { Button, Divider, Spacer } from "./Atoms"
 import { UserSettingsForm } from "./user/UserSettingsForm"
+
+export const EstimatesPage = () => (
+  <SocketProvider uri="/estimate">
+    <InitialSubscription />
+    <HiddenStateSubscription />
+    <EstimatesSubscription />
+    <CurrentUsernameSubscription />
+    <main className="layout">
+      <EstimatePicker />
+      <Sidebar />
+    </main>
+  </SocketProvider>
+)
 
 const CurrentUsernameSubscription = () => {
   const [currentUsername] = useRecoilState(usernameState)
@@ -257,18 +269,3 @@ const estimateValues = [
   "∞",
   "?",
 ]
-
-export const EstimatesPage = () => (
-  <RecoilRoot>
-    <SocketProvider uri="/estimate">
-      <InitialSubscription />
-      <HiddenStateSubscription />
-      <EstimatesSubscription />
-      <CurrentUsernameSubscription />
-      <main className="layout">
-        <EstimatePicker />
-        <Sidebar />
-      </main>
-    </SocketProvider>
-  </RecoilRoot>
-)
